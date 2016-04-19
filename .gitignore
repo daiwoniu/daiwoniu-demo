@@ -1,0 +1,13 @@
+*.iml
+.idea
+*.swp
+*.swn
+.swj
+.swk
+.swm
+.swo
+*.DS_Store
+assets.manifest
+target/*
+lib/*
+logs/*
