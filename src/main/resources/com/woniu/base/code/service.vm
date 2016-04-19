@@ -1,0 +1,36 @@
+package ${packageName};
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.woniu.base.db.Pagination;
+import com.woniu.base.db.Query;
+import com.woniu.base.service.EntityService;
+import ${table.EntityFullClassName};
+import com.woniu.base.web.QueryForm;
+
+/**
+* ${table.Label} Service
+*/
+@Service
+public class ${table.ServiceClassName} extends EntityService<${table.EntityClassName}, ${table.PrimaryType}> {
+	private Logger logger = LoggerFactory.getLogger(${table.ServiceClassName}.class);
+
+	public ${table.ServiceClassName}() {
+		super(${table.EntityClassName}.class);
+	}
+
+	@Transactional
+	public Pagination<${table.EntityClassName}> search(QueryForm qf) {
+		Query q = db.from("${table.Name}");
+#if (${table.getQueryColumns("eq")})
+		qf.setupEqConditions(q, ${table.getQueryColumns("eq")});
+#end
+#if (${table.getQueryColumns("like")})
+		qf.setupLikeConditions(q, ${table.getQueryColumns("like")});
+#end
+		return q.orderBy(qf.getOrderBy()).paginate(${table.EntityClassName}.class, qf.getPage());
+	}
+}
