@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
-<%@ taglib uri="http://taglib.zzzhc.com" prefix="z"%>
 <%@taglib prefix="z" uri="http://taglib.woniu.com"%>
 <z:breadcrumb breadcrumb="${breadcrumb}"/>
 <div class="row-fluid clearfix">
@@ -15,19 +14,17 @@
 </div>
 <div class="row-fluid">
 <form:form action="${table.UriPrefix}" method="GET"
-	modelAttribute="qf" cssClass="basic-form form-horizontal">
+	modelAttribute="qf" cssClass="basic-form form-inline">
 #foreach ($column in $table.SearchableColumns)
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label" for="${column.ColumnName}">${column.Label}</label>
-		<div class="controls">
-			<input type="text" name="${column.ColumnName}" value="${ qf.get("${column.ColumnName}") }" class="${column.ValidationFormClass}" placeholder="${column.Label}" />
-		</div>
+		<input type="text" name="${column.ColumnName}" value="${ qf.get("${column.ColumnName}") }" class="${column.ValidationFormClass}" placeholder="${column.Label}" />
 	</div>
+	&nbsp;&nbsp;
 #end
-	<div class="control-group">
-		<div class="controls">
-			<button type="submit" class="btn">查询</button>
-		</div>
+&nbsp;&nbsp;
+	<div class="form-group">
+		<button type="submit" class="btn">查询</button>
 	</div>
 </form:form>
 </div>
