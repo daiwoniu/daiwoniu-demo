@@ -7,7 +7,7 @@
     <!-- Main Footer -->
     <footer class="main-footer">
         <div class="container">
-            <div class="pull-right hidden-xs">
+            <div class="pull-right">
                 <b>Version</b> 1.0.0
             </div>
             <strong>Copyright © 2015-2016 Demo系统.</strong>

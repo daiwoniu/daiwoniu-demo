@@ -28,9 +28,9 @@
 				<div class="container">
 					<div class="navbar-header">
 						<a href="/" class="navbar-brand"><b>Demo查询</b></a>
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-							<i class="fa fa-bars"></i>
-						</button>
+						<%--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">--%>
+							<%--<i class="fa fa-bars"></i>--%>
+						<%--</button>--%>
 					</div>
 				</div>
 			</nav>
@@ -124,7 +124,7 @@
 		<!-- Main Footer -->
 		<footer class="main-footer">
 			<div class="container">
-				<div class="pull-right hidden-xs">
+				<div class="pull-right">
 					<b>Version</b> 1.0.0
 					<a href="/admin">进入后台</a>
 				</div>
