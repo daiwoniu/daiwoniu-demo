@@ -5,7 +5,7 @@
 <%@taglib prefix="z" uri="http://taglib.woniu.com"%>
 <z:breadcrumb breadcrumb="${breadcrumb}"/>
 <h3>编辑${table.Label}</h3>
-<form:form action="${table.UriPrefix}/${${table.EntityInstanceName}.id}" method="POST" validate="true"
+<form:form action="${table.UriPrefix}/${${table.EntityInstanceName}.id}" method="POST" validate="true" enctype="multipart/form-date"
 	modelAttribute="${table.EntityInstanceName}" cssClass="basic-form form-horizontal">
 	<input type="hidden" name="_method" value="PUT" />
 #foreach ($column in $table.LabeledColumns)

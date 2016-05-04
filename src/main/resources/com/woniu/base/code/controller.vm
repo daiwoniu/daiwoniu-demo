@@ -77,7 +77,8 @@ public class ${table.ControllerClassName} extends BaseController {
 	}
 
 	@RequestMapping(value = "/{id:^\\d+$}", method = RequestMethod.PUT)
-	public String update(HttpServletRequest request, @PathVariable("id") Long id, ${table.EntityClassName} input, BindingResult result, Model model) {
+	public String update(HttpServletRequest request, @PathVariable("id") Long id, @Valid ${table.EntityClassName} input, BindingResult result, Model model) {
+		input.setId(id);
 		if (result.hasErrors()) {
 			model.addAttribute("${table.EntityInstanceName}", input);
 			setBreadcrumb(request, "${table.Label}管理", "${table.UriPrefix}", input.getId(), "${table.UriPrefix}/" + input.getId(), "编辑", null);

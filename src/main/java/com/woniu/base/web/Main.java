@@ -23,7 +23,7 @@ public class Main {
 			war = "webapp";
 		}
 		String contextPath = "/";
-		int gracefulShutdownTimeout = 3000;
+		int gracefulShutdownTimeout = 30000;
 
 		Options options = new Options();
 		options.addOption("p", "port", true, "server port, default is "
@@ -64,6 +64,7 @@ public class Main {
 		Server server = new Server(new QueuedThreadPool(threadSize));
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(port);
+		connector.setIdleTimeout(gracefulShutdownTimeout);
 		server.addConnector(connector);
 
 		WebAppContext webapp = new WebAppContext();
