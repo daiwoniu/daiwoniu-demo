@@ -3,9 +3,7 @@ package com.woniu.base.db;
 import com.google.common.base.Joiner;
 import com.woniu.base.lang.Strings;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class GenericSQLBuilder implements ISQLBuilder {
 	protected String table;
@@ -13,7 +11,8 @@ public class GenericSQLBuilder implements ISQLBuilder {
 
 	protected List<String> columns = new ArrayList<String>();
 	protected List<String> joins = new ArrayList<String>();
-	protected List<String> conditions = new ArrayList<String>();
+//	protected List<String> conditions = new ArrayList<String>();
+	protected Map<String, List<String>> conditions = new LinkedHashMap<>();
 	protected List<String> groupBys = new ArrayList<String>();
 	protected List<String> havings = new ArrayList<String>();
 	protected List<String> orderBys = new ArrayList<String>();
@@ -23,7 +22,8 @@ public class GenericSQLBuilder implements ISQLBuilder {
 	protected Integer offset;
 	protected Integer rowCount;
 
-	protected List<Object> parameters = new ArrayList<Object>();
+//	protected List<Object> parameters = new ArrayList<Object>();
+	protected Map<String, List<Object>> parameters = new LinkedHashMap<>();
 
 	@Override
 	public ISQLBuilder clone() {
@@ -32,11 +32,13 @@ public class GenericSQLBuilder implements ISQLBuilder {
 
 			clone.columns = new ArrayList<String>(columns);
 			clone.joins = new ArrayList<String>(joins);
-			clone.conditions = new ArrayList<String>(conditions);
+//			clone.conditions = new ArrayList<String>(conditions);
+			clone.conditions = new LinkedHashMap<>(conditions);
 			clone.groupBys = new ArrayList<String>(groupBys);
 			clone.havings = new ArrayList<String>(havings);
 			clone.orderBys = new ArrayList<String>(orderBys);
-			clone.parameters = new ArrayList<Object>(parameters);
+//			clone.parameters = new ArrayList<Object>(parameters);
+			clone.parameters = new LinkedHashMap<>(parameters);
 			clone.lockForUpdate = lockForUpdate;
 
 			return clone;
@@ -51,8 +53,14 @@ public class GenericSQLBuilder implements ISQLBuilder {
 	}
 
 	@Override
-	public Object[] getParameters() {
-		return parameters.toArray();
+	public Object[] getParameters()
+	{
+		//		return parameters.toArray();
+		List<Object> arrList = new ArrayList<>();
+		for (List<Object> list : parameters.values()){
+			arrList.addAll(list);
+		}
+		return arrList.toArray();
 	}
 
 	@Override
@@ -63,13 +71,23 @@ public class GenericSQLBuilder implements ISQLBuilder {
             sql.append(" count(*) from ");
 			sql.append(table).append(toJoinSQL());
 			if (!conditions.isEmpty()) {
-				sql.append(" where ");
-				for (int i = 0; i < conditions.size(); i++) {
-					if (i > 0) {
-						sql.append(" and ");
+				sql.append(" where 1=1 ");
+				for (List<String> list : conditions.values()){
+					sql.append(" and (");
+					for (int i = 0; i < list.size(); i++) {
+						if (i > 0) {
+							sql.append(" or ");
+						}
+						sql.append(list.get(i));
 					}
-					sql.append(conditions.get(i));
+					sql.append(") ");
 				}
+//				for (int i = 0; i < conditions.size(); i++) {
+//					if (i > 0) {
+//						sql.append(" and ");
+//					}
+//					sql.append(conditions.get(i));
+//				}
 			}
 
 			return sql.toString();
@@ -91,13 +109,24 @@ public class GenericSQLBuilder implements ISQLBuilder {
         sql.append(toSelectColumns()).append(" from ").append(table)
 				.append(toJoinSQL());
 		if (!conditions.isEmpty()) {
-			sql.append(" where ");
-			for (int i = 0; i < conditions.size(); i++) {
-				if (i > 0) {
-					sql.append(" and ");
+			sql.append(" where 1=1 ");
+			for (List<String> list : conditions.values()){
+				sql.append(" and (");
+				for (int i = 0; i < list.size(); i++) {
+					if (i > 0) {
+						sql.append(" or ");
+					}
+					sql.append(list.get(i));
 				}
-				sql.append(conditions.get(i));
+				sql.append(") ");
 			}
+//			sql.append(" where ");
+//			for (int i = 0; i < conditions.size(); i++) {
+//				if (i > 0) {
+//					sql.append(" and ");
+//				}
+//				sql.append(conditions.get(i));
+//			}
 		}
 
 		if (withGroup) {
@@ -179,11 +208,40 @@ public class GenericSQLBuilder implements ISQLBuilder {
 
 	@Override
 	public void where(String condition, Object... params) {
-		conditions.add(condition);
+		String orkey = String.valueOf(System.nanoTime());
+		where(orkey, condition, params);
+//		conditions.add(condition);
+//
+//		for (Object param : params) {
+//			parameters.add(param);
+//		}
+	}
 
-		for (Object param : params) {
-			parameters.add(param);
+	@Override
+	public void where(String orKey, String condition, Object... params) {
+		if(Strings.isBlank(orKey)){
+			orKey = String.valueOf(System.nanoTime());
 		}
+		if(conditions.containsKey(orKey)){
+			conditions.get(orKey).add(condition);
+		}else{
+			List<String> list = new ArrayList<>();
+			list.add(condition);
+			conditions.put(orKey, list);
+
+		}
+		List<Object> arrList = new ArrayList<>();
+		for (Object param : params) {
+			arrList.add(param);
+		}
+		if(parameters.containsKey(orKey)){
+			parameters.get(orKey).addAll(arrList);
+		}else{
+			parameters.put(orKey, arrList);
+		}
+//		for (Object param : params) {
+//			parameters.add(param);
+//		}
 	}
 
 	@Override

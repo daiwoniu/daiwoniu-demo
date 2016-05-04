@@ -17,6 +17,14 @@ public interface ISQLBuilder extends Cloneable {
 
 	void where(String condition, Object... params);
 
+	/**
+	 * 支持or条件查询
+	 * @param orKey 判断一组or查询的key
+	 * @param condition 条件列名
+	 * @param params 条件值
+	 */
+	void where(String orKey, String condition, Object... params);
+
 	void select(String... columns);
 
 	void clearSelect();

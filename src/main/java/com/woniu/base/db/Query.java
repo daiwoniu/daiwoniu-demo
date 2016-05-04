@@ -208,6 +208,11 @@ public class Query implements Cloneable {
         return this;
     }
 
+    private Query where(String orKey, Condition c) {
+        sqlBuilder.where(orKey, c.toSQL(sqlBuilder), c.params);
+        return this;
+    }
+
     public Query segment(String sql, Object... params) {
         return where(new Condition(ConditionType.SEGMENT, sql, params));
     }
@@ -216,8 +221,16 @@ public class Query implements Cloneable {
         return where(new Condition(ConditionType.EQ, name, value));
     }
 
+    public Query eq(String orKey, String name, Object value) {
+        return where(orKey, new Condition(ConditionType.EQ, name, value));
+    }
+
     public Query where(String name, Object value) {
         return eq(name, value);
+    }
+
+    public Query where(String orKey, String name, Object value) {
+        return eq(orKey, name, value);
     }
 
     public Query where(String name, Object value, boolean ignoreNullValue) {
@@ -287,6 +300,11 @@ public class Query implements Cloneable {
                 from, to}));
     }
 
+    public Query between(String orKey, String name, Object from, Object to) {
+        return where(orKey, new Condition(ConditionType.BETWEEN, name, new Object[]{
+                from, to}));
+    }
+
     public Query notBetween(String name, Object from, Object to) {
         return where(new Condition(ConditionType.NOT_BETWEEN, name,
                 new Object[]{from, to}));
@@ -314,6 +332,10 @@ public class Query implements Cloneable {
         return where(new Condition(ConditionType.LE, name, value));
     }
 
+    public Query lessOrEquals(String orKey, String name, Object value) {
+        return where(orKey, new Condition(ConditionType.LE, name, value));
+    }
+
     public Query great(String name, Object value, boolean ignoreNullValue) {
         if (ignoreNullValue && value == null) {
             return this;
@@ -334,6 +356,10 @@ public class Query implements Cloneable {
 
     public Query greatOrEquals(String name, Object value) {
         return where(new Condition(ConditionType.GE, name, value));
+    }
+
+    public Query greatOrEquals(String orKey, String name, Object value) {
+        return where(orKey, new Condition(ConditionType.GE, name, value));
     }
 
     public Query isNull(String name) {
