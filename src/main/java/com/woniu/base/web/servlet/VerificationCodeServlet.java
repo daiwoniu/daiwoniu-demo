@@ -13,7 +13,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings("serial")
+/**
+ * 简单纯数字验证码Servlet
+ */
 public class VerificationCodeServlet extends HttpServlet {
 	public static final String DEFAULT_SESSION_KEY_NAME = "v";
 
